@@ -1,0 +1,72 @@
+'''
+The player class extends the pygame sprite class, to create the player sprite and make it
+controllable by the user
+Ashley Ingram
+'''
+
+import pygame, error, game
+
+class Player(pygame.sprite.Sprite):
+
+    def __init__(self, screen):
+        """__init__ constructor function
+        @param self
+        @param screen The surface the sprite is rendered onto
+        @return None
+        @desc The constructor function loads the image, and sets the position of the sprite
+        @exception ResourceException Thrown when the image file is missing"""
+        super().__init__()
+        self.screen = screen
+        try:
+            self.image = pygame.image.load('sprites/player1.png').convert_alpha()
+        except:
+            error.ResourceException('sprites/player1.png')
+
+        self.rect = self.image.get_rect()
+        self.rect.x = 20
+        self.rect.centery = screen.get_height() // 2
+        self.dropvelocity = 5
+        self.moveup = False
+
+    def update(self, asteroidGroup):
+        """update method
+        @param self
+        @param asteroidGroup A pygame sprite group (pygame.sprite.Group()) containing all the asteroids. Used for collision detection
+        @return string Returns the string "Game Over" when the sprite collides with an asteroid
+        @desc The update method handles the logic every frame for the player. It moves the sprite and re-renders it on the screen,
+        and handles collision detection, alerting the game class when a gameover state is reached
+        """
+        #If self.moveup is false, then the player needs to move down. If its true then they need to move up. This is changed by the moveUp and moveDown methods through encapsulation
+        if (self.moveup == False):
+            self.rect.y += self.dropvelocity
+        else:
+            self.rect.y -= self.dropvelocity
+        if (self.rect.y < 0 or self.rect.y > self.screen.get_height()): #The player has gone off the screen
+            #explode
+            return "Game Over"
+        if pygame.sprite.spritecollideany(self, asteroidGroup): #The player has hit an asteroid
+            return "Game Over"
+        
+    def moveUp(self):
+        """moveUp method
+        @param self
+        @return None
+        @desc An encapsulation method to set the player moving up
+        """
+        self.moveup = True
+        try:
+            self.image = pygame.image.load('sprites/player2.png').convert_alpha()
+        except:
+            error.ResourceException('sprites/player2.png')
+        
+    def moveDown(self):
+        """moveDown method
+        @param self
+        @return None
+        @desc An encapsulation method to set the player moving down
+        """
+        self.moveup = False
+        try:
+            self.image = pygame.image.load('sprites/player1.png').convert_alpha()
+        except:
+            error.ResourceException('sprites/player1.png')

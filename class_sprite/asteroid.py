@@ -1,0 +1,55 @@
+'''
+The Asteroid Class controls the enemies which come towards the player.
+Specifically, it is an implementation of the pygame sprite class, for the asteroids
+Ashley Ingram
+'''
+
+import pygame, error, random
+
+class Asteroid(pygame.sprite.Sprite):
+
+    def __init__(self, screen, group):
+        """__init__ constructor function
+        @param self
+        @param screen The surface for the sprites to be rendered
+        @group The group the asteroids are part of, used for collision purposes
+        @return None
+        @desc The constructor function loads the images, and saves relevant variables in class scope
+        @exception ResourceException Thrown when an image doesnt exist"""
+        super(Asteroid, self).__init__()
+        self.group = group
+        self.screen = screen
+        try:
+            self.image = pygame.image.load('sprites/asteroid.png').convert_alpha()
+        except:
+            error.ResourceException('sprites/asteroid.png')
+        self.rect = self.image.get_rect()
+        self.getSpawnLocation()
+        self.speed = 7
+        
+    def update(self):
+        """update method
+        @param self
+        @return None
+        @desc The update method moves the asteroid across the screen
+        """
+        self.rect.x -= self.speed
+        if (self.rect.x < 0 - self.rect.width):
+            #When the asteroid goes off the screen, reload it in a new position on the right. This prevents the overhead of creating and destroying instances every time one goes off screen
+            self.getSpawnLocation()
+            
+    def getSpawnLocation(self):
+        """getSpawnLocation method
+        @param self
+        @return None
+        @desc A method to get a valid point for the asteroid to spawn on the right hand side"""
+        #A random position off screen. This keeps the asteroids from all being vertically aligned when they come on screen
+        self.rect.x = random.randint(self.screen.get_width() + 1, self.screen.get_width() * 2)
+        #A random position to prevent all the asteroids from being horizontally aligned
+        self.rect.y = random.randint(0, self.screen.get_height() - self.rect.height)
+        #Check if the sprite is colliding with another asteroid. If this is the case then all the asteroids appear in one area as a blob. This isn't desired as it doesnt map the real world very well
+        collision = pygame.sprite.spritecollide(self, self.group, False)
+        for col in collision:
+            if (col != self):
+                #If the asteroid is collding with another one, recursively call the function. This will continue to occur until a valid spawn point is found
+                self.getSpawnLocation()

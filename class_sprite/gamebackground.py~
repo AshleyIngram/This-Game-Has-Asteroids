@@ -1,0 +1,14 @@
+import pygame, error
+
+class GameBackground(pygame.sprite.Sprite):
+	def __init__(self, screen):
+		self.screen = screen
+		try:
+			self.image = pygame.image.load("sprites/game_bg.png").convert()
+		except:
+			error.ResourceException("sprites/game_bg.png")
+			
+		self.rect = self.image.get_rect()
+	
+	def update(self):
+		pass

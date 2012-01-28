@@ -1,0 +1,5 @@
+[3/12/2010 11:52:45]	ResourceException - The file sprites/game_bg.png was missing
+[9/1/2012 13:28:54]	CorruptHighScore - The High-Score file contained letters or other invalid characters
+[28/1/2012 22:42:3]	CorruptHighScore - The High-Score file contained letters or other invalid characters
+[28/1/2012 22:46:30]	CorruptHighScore - The High-Score file contained letters or other invalid characters
+[28/1/2012 22:48:26]	CorruptHighScore - The High-Score file contained letters or other invalid characters
